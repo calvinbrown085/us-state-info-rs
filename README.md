@@ -1,6 +1,6 @@
 # us-state-info-rs
 United States Individual State Information
-[![Docs]](https://docs.rs/us-state-info-rs/badge.svg)
+[![Docs](https://docs.rs/us-state-info-rs/badge.svg)]
 [![Apache-2 licensed](https://img.shields.io/crates/l/us-state-info-rs.svg)](./LICENSE)
 [![CI](https://github.com/calvinbrown085/us-state-info-rs/workflows/Rust/badge.svg)](https://github.com/calvinbrown085/us-state-info-rs/actions?query=workflow%3ARust)
 
