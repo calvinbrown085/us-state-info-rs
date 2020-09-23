@@ -2,7 +2,7 @@ use std::fmt;
 
 #[allow(dead_code)]
 #[derive(Debug)]
-/// Allows a user to get
+/// Enumeration of all states in the US 2 letter form.
 ///
 /// ```
 /// use us_state_info_rs::StateAbbr;
