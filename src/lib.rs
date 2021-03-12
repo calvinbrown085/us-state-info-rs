@@ -196,6 +196,22 @@ impl FromStr for StateAbbr {
     }
 }
 
+#[cfg(feature = "serde")]
+use serde::{Serialize, Serializer, Deserialize, Deserializer, de};
+#[cfg(feature = "serde")]
+impl Serialize for StateAbbr {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&self.to_string())
+    }
+}
+#[cfg(feature = "serde")]
+impl<'de> Deserialize<'de> for StateAbbr {
+    fn deserialize<D: Deserializer<'de>>(deserialize: D) -> Result<Self, D::Error> {
+        let s = String::deserialize(deserialize)?;
+        s.parse().map_err(de::Error::custom)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::StateAbbr;
@@ -225,5 +241,33 @@ mod tests {
         assert_eq!(StateAbbr::CO, state_abbr.parse().unwrap());
         let state_abbr = "co";
         assert_eq!(StateAbbr::CO, state_abbr.parse().unwrap());
+    }
+
+    #[cfg(feature = "serde")]
+    use serde::{Serialize, Deserialize};
+    #[cfg(feature = "serde")]
+    use serde_json;
+
+    #[cfg(feature = "serde")]
+    #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    struct TestStateAbbr {
+        abbr: StateAbbr,
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn test_serde() {
+
+        let t = TestStateAbbr {
+            abbr: StateAbbr::CO,
+        };
+
+        let s = serde_json::to_string(&t).unwrap();
+
+        assert_eq!(s, "{\"abbr\":\"CO\"}");
+
+        let t2 = serde_json::from_str(&s).unwrap();
+
+        assert_eq!(t, t2);
     }
 }
