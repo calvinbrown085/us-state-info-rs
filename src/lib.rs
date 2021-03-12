@@ -1,7 +1,8 @@
-use std::fmt;
+use std::error::Error;
+use std::fmt::{self, Display, Formatter};
+use std::str::FromStr;
 
-#[allow(dead_code)]
-#[derive(Debug)]
+#[derive(Copy, Clone, Eq, PartialEq, Debug)]
 /// Enumeration of all states in the US 2 letter form.
 ///
 /// ```
@@ -120,6 +121,81 @@ impl fmt::Display for StateAbbr {
     }
 }
 
+#[derive(Debug)]
+pub enum ParseStateAbbrError {
+    InvalidAbbreviationError,
+}
+
+impl Display for ParseStateAbbrError {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        match self {
+            Self::InvalidAbbreviationError => write!(f, "invalid state abbreviation"),
+        }
+    }
+}
+
+impl Error for ParseStateAbbrError {}
+
+impl FromStr for StateAbbr {
+    type Err = ParseStateAbbrError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match &s.to_ascii_uppercase()[..] {
+            "AL" => Ok(Self::AL),
+            "AK" => Ok(Self::AK),
+            "AZ" => Ok(Self::AZ),
+            "AR" => Ok(Self::AR),
+            "CA" => Ok(Self::CA),
+            "CO" => Ok(Self::CO),
+            "CT" => Ok(Self::CT),
+            "DE" => Ok(Self::DE),
+            "FL" => Ok(Self::FL),
+            "GA" => Ok(Self::GA),
+            "HI" => Ok(Self::HI),
+            "ID" => Ok(Self::ID),
+            "IL" => Ok(Self::IL),
+            "IN" => Ok(Self::IN),
+            "IA" => Ok(Self::IA),
+            "KS" => Ok(Self::KS),
+            "KY" => Ok(Self::KY),
+            "LA" => Ok(Self::LA),
+            "ME" => Ok(Self::ME),
+            "MD" => Ok(Self::MD),
+            "MA" => Ok(Self::MA),
+            "MI" => Ok(Self::MI),
+            "MN" => Ok(Self::MN),
+            "MS" => Ok(Self::MS),
+            "MO" => Ok(Self::MO),
+            "MT" => Ok(Self::MT),
+            "NE" => Ok(Self::NE),
+            "NV" => Ok(Self::NV),
+            "NH" => Ok(Self::NH),
+            "NJ" => Ok(Self::NJ),
+            "NM" => Ok(Self::NM),
+            "NY" => Ok(Self::NY),
+            "NC" => Ok(Self::NC),
+            "ND" => Ok(Self::ND),
+            "OH" => Ok(Self::OH),
+            "OK" => Ok(Self::OK),
+            "OR" => Ok(Self::OR),
+            "PA" => Ok(Self::PA),
+            "RI" => Ok(Self::RI),
+            "SC" => Ok(Self::SC),
+            "SD" => Ok(Self::SD),
+            "TN" => Ok(Self::TN),
+            "TX" => Ok(Self::TX),
+            "UT" => Ok(Self::UT),
+            "VT" => Ok(Self::VT),
+            "VA" => Ok(Self::VA),
+            "WA" => Ok(Self::WA),
+            "WV" => Ok(Self::WV),
+            "WI" => Ok(Self::WI),
+            "WY" => Ok(Self::WY),
+            _ => Err(ParseStateAbbrError::InvalidAbbreviationError),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::StateAbbr;
@@ -134,5 +210,20 @@ mod tests {
     fn test_colorado_display_impl() {
         let state_abbr = StateAbbr::CO;
         assert_eq!("CO", format!("{}", state_abbr))
+    }
+    #[test]
+    fn test_iowa_fromstr_impl() {
+        let state_abbr = "IA";
+        assert_eq!(StateAbbr::IA, state_abbr.parse().unwrap());
+        let state_abbr = "ia";
+        assert_eq!(StateAbbr::IA, state_abbr.parse().unwrap());
+    }
+
+    #[test]
+    fn test_colorado_fromstr_impl() {
+        let state_abbr = "CO";
+        assert_eq!(StateAbbr::CO, state_abbr.parse().unwrap());
+        let state_abbr = "co";
+        assert_eq!(StateAbbr::CO, state_abbr.parse().unwrap());
     }
 }
